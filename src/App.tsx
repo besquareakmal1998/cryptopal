@@ -1,25 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import * as React from 'react';
+import { BrowserRouter, Route,Routes } from 'react-router-dom';
+import SignUp from '../src/Components/SignUp';
+import Home from '../src/Pages/Home'
+import Help from '../src/Pages/Help';
+import AboutUs from '../src/Pages/AboutUs';
+import NavBar from '../src/Components/Navigationbar';
+import SignIn from '../src/Components/SignIn';
+import Consolepage from '../src/Pages/Consolepage';
+import { Container } from 'react-bootstrap';
 
-function App() {
+import Features from '../src/Pages/Features';
+const App: React.FC =() => {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+
+    <Routes>
+          <Route path="/" element={<Consolepage />} />
+    </Routes>
+    
+     {/* <NavBar />  */}
+    <Routes>
+     <Route path="/home" element={<Home />} />
+          <Route path="/aboutus" element={<AboutUs />} />
+          <Route path="/help" element={<Help />} />
+          <Route path="/features" element={<Features />} />
+    </Routes>
+
+  
+  </>
+   
   );
 }
 
