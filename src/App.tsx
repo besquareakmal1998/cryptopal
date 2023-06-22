@@ -10,6 +10,8 @@ import Consolepage from '../src/Pages/Consolepage';
 import { Container } from 'react-bootstrap';
 
 import Features from '../src/Pages/Features';
+import 'chart.js';
+
 const App: React.FC =() => {
 
   return (
@@ -25,6 +27,7 @@ const App: React.FC =() => {
           <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/help" element={<Help />} />
           <Route path="/features" element={<Features />} />
+
     </Routes>
 
   
