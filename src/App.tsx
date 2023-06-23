@@ -8,9 +8,9 @@ import NavBar from '../src/Components/Navigationbar';
 import SignIn from '../src/Components/SignIn';
 import Consolepage from '../src/Pages/Consolepage';
 import { Container } from 'react-bootstrap';
-
+import RealTimeChart from '../src/Components/Realtimechart';
 import Features from '../src/Pages/Features';
-import 'chart.js';
+
 
 const App: React.FC =() => {
 

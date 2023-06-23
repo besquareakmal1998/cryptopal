@@ -1,13 +1,14 @@
 import React from "react";
 import NavBar from "../Components/Navigationbar";
-import LiveChart from "../Components/Livechart";
-
+import RealTimeChart from "../Components/Realtimechart";
+import WebSocketConnection from "../services/WebsocketConnection";
 const Features=() => {
     return(
         <div>
              <NavBar />
-             <LiveChart />
-            <h1>Features</h1>
+             <h1>Market</h1>
+             <RealTimeChart />
+            
         </div>
     )
 

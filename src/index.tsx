@@ -8,6 +8,8 @@ import { BrowserRouter } from 'react-router-dom';
 import Consolepage from './Pages/Consolepage';
 import CryptoContext from './CryptoContext';
 import 'react-alice-carousel/lib/alice-carousel.css';
+import 'chart.js';
+
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
