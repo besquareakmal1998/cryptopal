@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Chart from 'chart.js/auto';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -24,66 +25,87 @@ import {
 
 // Line.register(CategoryScale);
 
-const LifeChart: React.FC = () => {
-    const [chartData, setChartData] = useState<any>({
-      labels: [],
-      datasets: [
-        {
-          label: 'Bitcoin Price',
-          data: [],
-          borderColor: 'rgba(255, 99, 132, 1)',
-          backgroundColor: 'rgba(255, 99, 132, 0.2)',
-          borderWidth: 1,
-        },
-      ],
-    });
+interface ChartData {
+    x: number;
+    y: number;
+  }
+  
+  interface SocketData {
+    RAW: {
+      USD: {
+        PRICE: number;
+      };
+    };
+  }
+  
+  const LifeChart: React.FC = () => {
+    const [chartData, setChartData] = useState<ChartData[]>([]);
   
     useEffect(() => {
-      const ccStreamer = new WebSocket('wss://streamer.cryptocompare.com/v2');
+      const apiKey = 'fda6a333ee629fa55a6d3911ec7f34981aecffa364b98731255a23e72127ac4e';
   
-      ccStreamer.onopen = () => {
-        const subRequest = {
-          action: 'SubAdd',
-          subs: ['2~Coinbase~BTC~USD'],
+      const socket = new WebSocket(`wss://streamer.cryptocompare.com/v2?api_key=${apiKey}`);
+  
+      socket.onopen = () => {
+        console.log('WebSocket connection established');
+      };
+  
+      socket.onmessage = (event) => {
+        const data: SocketData = JSON.parse(event.data);
+        const { PRICE } = data.RAW.USD;
+        
+        const newData: ChartData = {
+          x: new Date().getTime(),
+          y: PRICE,
         };
-        ccStreamer.send(JSON.stringify(subRequest));
+  
+        setChartData((prevData) => [...prevData, newData]);
       };
   
-      ccStreamer.onmessage = (event) => {
-        const message = JSON.parse(event.data);
-        if (message.TYPE === '2' && message.MARKET === 'Coinbase' && message.FROMSYMBOL === 'BTC' && message.TOSYMBOL === 'USD') {
-          const time = new Date(message.LASTUPDATE * 1000).toLocaleTimeString();
-          const price = message.PRICE;
-  
-          setChartData((prevData: any) => ({
-            ...prevData,
-            labels: [...prevData.labels, time],
-            datasets: [
-              {
-                ...prevData.datasets[0],
-                data: [...prevData.datasets[0].data, price],
-              },
-            ],
-          }));
-        }
-      };
-  
-      ccStreamer.onclose = () => {
+      socket.onclose = () => {
         console.log('WebSocket connection closed');
-        // Handle connection closed event
       };
   
       return () => {
-        ccStreamer.close();
+        socket.close();
       };
     }, []);
   
-    return (
-      <div>
-        <Line data={chartData} />
-      </div>
-    );
+    useEffect(() => {
+      const ctx = document.getElementById('myChart') as HTMLCanvasElement;
+      if (ctx) {
+        const myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: chartData.map((data) => data.x.toString()),
+            datasets: [
+              {
+                label: 'Live Chart',
+                data: chartData.map((data) => data.y),
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                type: 'time',
+                time: {
+                  unit: 'second',
+                },
+              },
+            },
+          },
+        });
+  
+        return () => {
+          myChart.destroy();
+        };
+      }
+    }, [chartData]);
+  
+    return <canvas id="myChart" />;
   };
   
   export default LifeChart;
-  

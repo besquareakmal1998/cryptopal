@@ -13,7 +13,7 @@ const Home=() => {
 
 <Carousel />
          {/* <LifeChart /> */}
-<WebSocketConnection />
+
         </div>
     )
 
